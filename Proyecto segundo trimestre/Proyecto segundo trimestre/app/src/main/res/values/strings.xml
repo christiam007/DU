@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Proyecto Firebase</string>
+
+    <!-- Strings existentes -->
+    <string name="imagen_pelicula">Imagen de la película</string>
+    <string name="content_desc_movie_poster">Portada de la película %1$s</string>
+    <string name="content_desc_movie_detail">Detalles de la película %1$s</string>
+    <string name="action_add_favorite">Agregar a favoritos</string>
+    <string name="action_remove_favorite">Eliminar de favoritos</string>
+    <string name="announcement_added_favorite">Agregado a favoritos</string>
+    <string name="announcement_removed_favorite">Eliminado de favoritos</string>
+    <string name="fab_add_favorite">Agregar a favoritos</string>
+    <string name="fab_remove_favorite">Eliminar de favoritos</string>
+
+    <!-- Nuevas descripciones de accesibilidad para Login -->
+    <string name="login_logo_desc">Logo de la aplicación</string>
+    <string name="login_user_label">Campo de usuario</string>
+    <string name="login_password_label">Campo de contraseña</string>
+    <string name="login_button_desc">Botón para iniciar sesión</string>
+    <string name="login_register_link_desc">Enlace para registrarse como nuevo usuario</string>
+    <string name="login_password_toggle_desc">Mostrar u ocultar contraseña</string>
+
+    <!-- Descripciones de accesibilidad para campos vacíos -->
+    <string name="login_empty_user">Campo de usuario vacío</string>
+    <string name="login_empty_password">Campo de contraseña vacío</string>
+
+    <!-- Descripciones de accesibilidad para mensajes de error -->
+    <string name="login_error_invalid_user">Usuario inválido</string>
+    <string name="login_error_invalid_password">Contraseña inválida</string>
+    <string name="login_error_empty_fields">Por favor complete todos los campos</string>
+
+    <!-- Descripciones de accesibilidad para Splash Screen -->
+    <string name="splash_logo_desc">Logo de bienvenida</string>
+    <string name="splash_loading_desc">Cargando aplicación</string>
+    <string name="splash_version_desc">Versión de la aplicación</string>
+
+    <!-- Descripciones de accesibilidad para navegación -->
+    <string name="nav_back_desc">Volver atrás</string>
+    <string name="nav_close_desc">Cerrar</string>
+    <string name="nav_menu_desc">Menú de opciones</string>
+
+    <string name="login_user_hint">Ingrese Usuario</string>
+    <string name="login_password_hint">Ingrese Contraseña</string>
+
+    <!-- Nuevos strings para la pantalla de registro -->
+    <string name="registro_titulo">Registrar Usuario</string>
+    <string name="registro_label_nombre">Nombre</string>
+    <string name="registro_hint_nombre">Ingrese Nombre</string>
+    <string name="registro_label_apellidos">Apellidos</string>
+    <string name="registro_hint_apellidos">Ingrese Apellidos</string>
+    <string name="registro_label_correo">Correo</string>
+    <string name="registro_hint_correo">Ingrese Correo</string>
+    <string name="registro_label_password">Contraseña</string>
+    <string name="registro_hint_password">Ingrese Contraseña</string>
+    <string name="registro_label_confirm_password">Confirmar Contraseña</string>
+    <string name="registro_hint_confirm_password">Ingrese Confirmación de Contraseña</string>
+    <string name="registro_label_telefono">Teléfono</string>
+    <string name="registro_hint_telefono">Ingrese Número de Teléfono</string>
+    <string name="registro_label_direccion">Dirección</string>
+    <string name="registro_hint_direccion">Ingrese Dirección</string>
+    <string name="registro_btn_registrar">Registrar Usuario</string>
+    <string name="registro_volver_login">Volver a Ingreso</string>
+</resources>

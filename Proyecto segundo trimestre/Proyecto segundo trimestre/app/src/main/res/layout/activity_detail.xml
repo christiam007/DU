@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="pelicula"
+            type="com.example.proyecto_firebase.models.Pelicula" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivPeliculaDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@{`Imagen detallada de ` + pelicula.titulo}"
+                    android:importantForAccessibility="yes"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvTituloDetalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:text="@{pelicula.titulo}"
+                        android:importantForAccessibility="yes"
+                        tools:text="Título de la Película"/>
+
+                    <TextView
+                        android:id="@+id/tvDescripcionDetalle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_secondary"
+                        android:text="@{pelicula.descripcion}"
+                        android:importantForAccessibility="yes"
+                        tools:text="Descripción detallada de la película"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabFavorito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="Botón de favoritos"
+            android:importantForAccessibility="yes"
+            app:tint="@color/white"
+            app:backgroundTint="@color/accent"
+            app:srcCompat="@drawable/ic_favorite_border"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

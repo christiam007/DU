@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores base -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="accent">#D32F2F</color>
+    <color name="text_primary">#DE000000</color>
+    <color name="text_secondary">#99000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="background">#FFFFFF</color>
+    <color name="error">#B00020</color>
+
+    <!-- Colores para modo oscuro -->
+    <color name="dark_background">#121212</color>
+    <color name="dark_surface">#1E1E1E</color>
+    <color name="dark_card_background">#2D2D2D</color>
+    <color name="dark_text_primary">#DEFFFFFF</color>
+    <color name="dark_text_secondary">#99FFFFFF</color>
+
+    <!-- Nuevos colores para elementos específicos en modo oscuro -->
+    <color name="dark_ripple">#1FFFFFFF</color>
+    <color name="dark_divider">#1FFFFFFF</color>
+    <color name="dark_switch_thumb">#BDBDBD</color>
+    <color name="dark_switch_track">#757575</color>
+    <color name="dark_error">#CF6679</color>
+
+    <!-- Colores específicos para elementos en modo claro -->
+    <color name="light_ripple">#1F000000</color>
+    <color name="light_divider">#1F000000</color>
+    <color name="light_switch_thumb">#FFFFFF</color>
+    <color name="light_switch_track">#DADADA</color>
+
+    <!-- Colores splash existentes -->
+    <color name="splash_text_light">#FFFFFF</color>
+    <color name="splash_text_shadow">#40000000</color>
+    <color name="splash_overlay">#80000000</color>
+
+    <!-- Colores de estado -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFC107</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Variantes de oscuridad para colores de estado en modo oscuro -->
+    <color name="dark_success">#66BB6A</color>
+    <color name="dark_warning">#FFD54F</color>
+    <color name="dark_info">#42A5F5</color>
+</resources>
