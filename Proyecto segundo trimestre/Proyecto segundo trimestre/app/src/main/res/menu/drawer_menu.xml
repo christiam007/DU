@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:title="Dashboard"
+        android:icon="@drawable/ic_favorite" />
+
+    <item
+        android:id="@+id/nav_favourites"
+        android:title="Favoritos"
+        android:icon="@drawable/ic_favorite" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Perfil"
+        android:icon="@drawable/ic_favorite" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Cerrar Sesión"
+        android:icon="@drawable/ic_favorite" />
+</menu>

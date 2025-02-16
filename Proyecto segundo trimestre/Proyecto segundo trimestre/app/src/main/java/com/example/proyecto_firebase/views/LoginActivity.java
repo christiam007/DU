@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             dialogoProgreso.dismiss();
             if (usuarioFirebase != null) {
                 // Login exitoso
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
         });
