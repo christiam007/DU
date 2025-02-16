@@ -1,5 +1,7 @@
 package com.example.proyecto_firebase.views;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import com.example.proyecto_firebase.databinding.FragmentProfileBinding;
-import com.example.proyecto_firebase.utils.ThemeHelper;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,54 +35,84 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Configurar estado inicial del switch de tema
-        binding.switchTheme.setChecked(ThemeHelper.isDarkMode(requireContext()));
-
-        // Mostrar email del usuario
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            binding.tvUserEmail.setText(user.getEmail());
-        }
+        // Configurar estado inicial del switch
+        setupInitialState();
 
         // Configurar listeners
         setupListeners();
     }
 
-    private void setupListeners() {
-        // Switch de tema
-        binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            ThemeHelper.setDarkMode(requireContext(), isChecked);
-            requireActivity().recreate();
-        });
-
-        // Botón de cambiar contraseña
-        binding.btnChangePassword.setOnClickListener(v -> {
-            String newPassword = binding.etNewPassword.getText().toString();
-            if (!newPassword.isEmpty() && newPassword.length() >= 6) {
-                changePassword(newPassword);
-            } else {
-                Toast.makeText(requireContext(),
-                        "La contraseña debe tener al menos 6 caracteres",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void setupInitialState() {
+        SharedPreferences prefs = requireActivity()
+                .getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        boolean isDarkMode = prefs.getBoolean("darkMode", false);
+        binding.darkModeSwitch.setChecked(isDarkMode);
     }
 
-    private void changePassword(String newPassword) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            user.updatePassword(newPassword)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(requireContext(),
-                                "Contraseña actualizada",
-                                Toast.LENGTH_SHORT).show();
-                        binding.etNewPassword.setText("");
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(requireContext(),
-                                    "Error al actualizar contraseña",
-                                    Toast.LENGTH_SHORT).show());
+    private void setupListeners() {
+        // Listener para cambio de contraseña
+        binding.changePasswordButton.setOnClickListener(v -> changePassword());
+
+        // Listener para modo oscuro
+        binding.darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                toggleDarkMode(isChecked));
+    }
+
+    private void changePassword() {
+        String currentPass = binding.currentPasswordEditText.getText().toString();
+        String newPass = binding.newPasswordEditText.getText().toString();
+
+        if (currentPass.isEmpty() || newPass.isEmpty()) {
+            Toast.makeText(requireContext(),
+                    "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null && user.getEmail() != null) {
+            // Reautenticar usuario
+            AuthCredential credential = EmailAuthProvider
+                    .getCredential(user.getEmail(), currentPass);
+
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Actualizar contraseña
+                    user.updatePassword(newPass).addOnCompleteListener(updateTask -> {
+                        if (updateTask.isSuccessful()) {
+                            Toast.makeText(requireContext(),
+                                    "Contraseña cambiada con éxito", Toast.LENGTH_SHORT).show();
+                            clearPasswordFields();
+                        } else {
+                            Toast.makeText(requireContext(),
+                                    "Error al cambiar la contraseña", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(requireContext(),
+                            "La contraseña actual no es correcta", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void toggleDarkMode(boolean enableDarkMode) {
+        // Guardar preferencia
+        SharedPreferences prefs = requireActivity()
+                .getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        prefs.edit().putBoolean("darkMode", enableDarkMode).apply();
+
+        // Aplicar tema
+        AppCompatDelegate.setDefaultNightMode(
+                enableDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
+        );
+
+        // Recrear activity para aplicar cambios
+        requireActivity().recreate();
+    }
+
+    private void clearPasswordFields() {
+        binding.currentPasswordEditText.setText("");
+        binding.newPasswordEditText.setText("");
     }
 
     @Override

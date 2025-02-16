@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <!-- Variables para Data Binding si son necesarias -->
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,23 +12,22 @@
         android:padding="16dp"
         android:background="?android:colorBackground">
 
-        <!-- Email del usuario -->
-        <TextView
-            android:id="@+id/tvUserEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Switch de tema -->
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switchTheme"
+        <!-- EditText para contraseña actual -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Modo Oscuro"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="8dp"
+            app:endIconMode="password_toggle">
 
-        <!-- Cambio de contraseña simple -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/currentPasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña actual"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- EditText para nueva contraseña -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,18 +35,27 @@
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etNewPassword"
+                android:id="@+id/newPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nueva contraseña"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Botón de cambiar contraseña -->
         <Button
-            android:id="@+id/btnChangePassword"
+            android:id="@+id/changePasswordButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cambiar Contraseña"/>
+            android:text="Cambiar contraseña"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Switch para modo oscuro -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/darkModeSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Modo oscuro"/>
 
     </LinearLayout>
 </layout>

@@ -75,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         viewModel.obtenerResultadoRegistro().observe(this, resultado -> {
             if ("SUCCESS".equals(resultado)) {
                 Toast.makeText(this, "Usuario Creado con Éxito", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
+                startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
