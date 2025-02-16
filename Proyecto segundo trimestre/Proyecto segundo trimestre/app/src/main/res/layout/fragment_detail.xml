@@ -12,7 +12,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="?android:colorBackground">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?android:textColorPrimary"
                         android:text="@{pelicula.titulo}"
                         android:importantForAccessibility="yes"
                         tools:text="Título de la Película"/>
@@ -54,7 +54,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:textSize="16sp"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="?android:textColorSecondary"
                         android:text="@{pelicula.descripcion}"
                         android:importantForAccessibility="yes"
                         tools:text="Descripción detallada de la película"/>

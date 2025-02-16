@@ -61,4 +61,6 @@
     <string name="registro_hint_direccion">Ingrese Dirección</string>
     <string name="registro_btn_registrar">Registrar Usuario</string>
     <string name="registro_volver_login">Volver a Ingreso</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
