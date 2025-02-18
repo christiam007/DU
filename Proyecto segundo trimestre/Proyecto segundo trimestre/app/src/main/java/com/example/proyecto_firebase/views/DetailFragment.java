@@ -38,7 +38,7 @@ public class DetailFragment extends Fragment {
         // Inicializar ViewModel
         viewModel = new ViewModelProvider(this).get(DetailViewModel.class);
 
-        // Obtener datos del Bundle
+        // Recuperar argumentos del Bundle
         if (getArguments() != null) {
             pelicula = new Pelicula();
             pelicula.setId(getArguments().getString("id"));
@@ -117,7 +117,7 @@ public class DetailFragment extends Fragment {
     private void setupFabClick() {
         binding.fabFavorito.setOnClickListener(v -> {
             v.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
-            viewModel.toggleFavorito();
+            viewModel.toggleFavorito(pelicula);
         });
     }
 

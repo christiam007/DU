@@ -27,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).hide(); //Oculta el título de la aplicación
         setContentView(R.layout.login_main);
         inicializarVistas();
         configurarViewModel();

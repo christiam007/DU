@@ -50,48 +50,26 @@ public class FavouritesViewModel extends ViewModel {
         favoritosRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    List<Pelicula> listaFavoritos = new ArrayList<>();
-                    for (DataSnapshot favoritoSnapshot : dataSnapshot.getChildren()) {
-                        String peliculaId = favoritoSnapshot.getKey();
-                        cargarPeliculaFavorita(peliculaId, listaFavoritos);
+                List<Pelicula> listaFavoritos = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    try {
+                        Pelicula pelicula = snapshot.getValue(Pelicula.class);
+                        if (pelicula != null) {
+                            pelicula.setId(snapshot.getKey());
+                            pelicula.setFavorite(true);
+                            listaFavoritos.add(pelicula);
+                        }
+                    } catch (Exception e) {
+                        error.setValue("Error al procesar favorito: " + e.getMessage());
                     }
-                } catch (Exception e) {
-                    error.setValue("Error al cargar favoritos: " + e.getMessage());
-                    isLoading.setValue(false);
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                error.setValue("Error en la base de datos: " + databaseError.getMessage());
+                favoritos.setValue(listaFavoritos);
                 isLoading.setValue(false);
             }
-        });
-    }
-
-    private void cargarPeliculaFavorita(String peliculaId, final List<Pelicula> listaFavoritos) {
-        peliculasRef.child(peliculaId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    Pelicula pelicula = dataSnapshot.getValue(Pelicula.class);
-                    if (pelicula != null) {
-                        pelicula.setId(dataSnapshot.getKey());
-                        pelicula.setFavorite(true);
-                        listaFavoritos.add(pelicula);
-                        favoritos.setValue(listaFavoritos);
-                    }
-                } catch (Exception e) {
-                    error.setValue("Error al procesar película favorita: " + e.getMessage());
-                } finally {
-                    isLoading.setValue(false);
-                }
-            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                error.setValue("Error al cargar película favorita: " + databaseError.getMessage());
+                error.setValue("Error al cargar favoritos: " + databaseError.getMessage());
                 isLoading.setValue(false);
             }
         });

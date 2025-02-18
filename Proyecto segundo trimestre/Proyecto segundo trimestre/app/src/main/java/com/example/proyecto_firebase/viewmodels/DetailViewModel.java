@@ -3,6 +3,7 @@ package com.example.proyecto_firebase.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import com.example.proyecto_firebase.models.Pelicula;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -63,25 +64,24 @@ public class DetailViewModel extends ViewModel {
         });
     }
 
-    public void toggleFavorito() {
+    public void toggleFavorito(Pelicula pelicula) {
         isLoading.setValue(true);
-        Boolean favorito = esFavorito.getValue();
-        if (favorito != null) {
-            if (favorito) {
-                favoritosRef.child(peliculaId).removeValue()
-                        .addOnSuccessListener(aVoid -> isLoading.setValue(false))
-                        .addOnFailureListener(e -> {
-                            error.setValue("Error al eliminar de favoritos: " + e.getMessage());
-                            isLoading.setValue(false);
-                        });
-            } else {
-                favoritosRef.child(peliculaId).setValue(true)
-                        .addOnSuccessListener(aVoid -> isLoading.setValue(false))
-                        .addOnFailureListener(e -> {
-                            error.setValue("Error al agregar a favoritos: " + e.getMessage());
-                            isLoading.setValue(false);
-                        });
-            }
+        if (esFavorito.getValue() != null && esFavorito.getValue()) {
+            // Eliminar de favoritos
+            favoritosRef.child(peliculaId).removeValue()
+                    .addOnSuccessListener(aVoid -> isLoading.setValue(false))
+                    .addOnFailureListener(e -> {
+                        error.setValue("Error al eliminar de favoritos: " + e.getMessage());
+                        isLoading.setValue(false);
+                    });
+        } else {
+            // Guardar la película completa en favoritos
+            favoritosRef.child(peliculaId).setValue(pelicula)
+                    .addOnSuccessListener(aVoid -> isLoading.setValue(false))
+                    .addOnFailureListener(e -> {
+                        error.setValue("Error al agregar a favoritos: " + e.getMessage());
+                        isLoading.setValue(false);
+                    });
         }
     }
 }

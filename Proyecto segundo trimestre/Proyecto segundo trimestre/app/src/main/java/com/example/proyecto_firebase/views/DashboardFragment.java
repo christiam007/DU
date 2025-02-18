@@ -1,5 +1,6 @@
 package com.example.proyecto_firebase.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.proyecto_firebase.R;
 import com.example.proyecto_firebase.databinding.FragmentDashboardBinding;
 import com.example.proyecto_firebase.adapters.PeliculaAdapter;
 import com.example.proyecto_firebase.models.Pelicula;
 import com.example.proyecto_firebase.utils.ThemeHelper;
 import com.example.proyecto_firebase.viewmodels.DashboardViewModel;
+import com.example.proyecto_firebase.R;
 
 import java.util.ArrayList;
 
@@ -83,8 +83,8 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
 
         dashboardViewModel.getNavigateToLogin().observe(getViewLifecycleOwner(), shouldNavigate -> {
             if (shouldNavigate) {
-                Navigation.findNavController(requireView())
-                        .navigate(R.id.action_dashboardFragment_to_loginActivity);
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
+                startActivity(intent);
                 requireActivity().finish();
             }
         });
@@ -94,31 +94,45 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
             }
         });
+
+        dashboardViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            // Aquí puedes mostrar u ocultar un indicador de carga si lo tienes
+        });
     }
 
     private void setupListeners() {
         binding.btnCerrarSesion.setOnClickListener(v -> {
             dashboardViewModel.cerrarSesion();
-            Toast.makeText(requireContext(),
-                    "Cerraste Sesión Exitosamente", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Cerraste Sesión Exitosamente", Toast.LENGTH_SHORT).show();
         });
 
         binding.btnFavoritos.setOnClickListener(v -> {
-            Navigation.findNavController(v)
-                    .navigate(R.id.action_dashboardFragment_to_favouritesFragment);
+            FavouritesFragment favouritesFragment = new FavouritesFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, favouritesFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 
     @Override
     public void onPeliculaClick(Pelicula pelicula) {
+        DetailFragment detailFragment = new DetailFragment();
+
         Bundle bundle = new Bundle();
         bundle.putString("id", pelicula.getId());
         bundle.putString("titulo", pelicula.getTitulo());
         bundle.putString("descripcion", pelicula.getDescripcion());
         bundle.putString("imagen", pelicula.getImagen());
 
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_dashboardFragment_to_detailFragment, bundle);
+        detailFragment.setArguments(bundle);
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

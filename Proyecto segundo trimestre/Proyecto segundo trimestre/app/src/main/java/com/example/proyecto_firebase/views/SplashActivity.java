@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.proyecto_firebase.R;
 import com.example.proyecto_firebase.utils.ThemeHelper;
 
-import java.util.Objects;
-
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -20,11 +18,10 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).hide(); //Oculta el título de la aplicación
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }, 5000);
     }

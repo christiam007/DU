@@ -9,14 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.proyecto_firebase.R;
 import com.example.proyecto_firebase.databinding.FragmentFavouritesBinding;
 import com.example.proyecto_firebase.adapters.PeliculaAdapter;
 import com.example.proyecto_firebase.models.Pelicula;
 import com.example.proyecto_firebase.viewmodels.FavouritesViewModel;
-
+import com.example.proyecto_firebase.R;
 import java.util.ArrayList;
 
 public class FavouritesFragment extends Fragment implements PeliculaAdapter.OnPeliculaClickListener {
@@ -79,14 +77,21 @@ public class FavouritesFragment extends Fragment implements PeliculaAdapter.OnPe
 
     @Override
     public void onPeliculaClick(Pelicula pelicula) {
+        DetailFragment detailFragment = new DetailFragment();
+
         Bundle bundle = new Bundle();
         bundle.putString("id", pelicula.getId());
         bundle.putString("titulo", pelicula.getTitulo());
         bundle.putString("descripcion", pelicula.getDescripcion());
         bundle.putString("imagen", pelicula.getImagen());
 
-        Navigation.findNavController(requireView())
-                .navigate(R.id.action_favouritesFragment_to_detailFragment, bundle);
+        detailFragment.setArguments(bundle);
+
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
