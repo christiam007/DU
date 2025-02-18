@@ -1,6 +1,5 @@
 package com.example.proyecto_firebase.views;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.proyecto_firebase.databinding.FragmentDashboardBinding;
 import com.example.proyecto_firebase.adapters.PeliculaAdapter;
 import com.example.proyecto_firebase.models.Pelicula;
-import com.example.proyecto_firebase.utils.ThemeHelper;
 import com.example.proyecto_firebase.viewmodels.DashboardViewModel;
 import com.example.proyecto_firebase.R;
 
@@ -33,6 +32,7 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -41,31 +41,22 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Configurar ActionBar
+        if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Dashboard");
+        }
+
         // Inicializar ViewModel
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
         // Configurar RecyclerView
         setupRecyclerView();
 
-        // Configurar el switch del tema
-        setupThemeSwitch();
-
         // Observar cambios en los datos
         observeViewModel();
 
-        // Configurar listeners
-        setupListeners();
-
         // Cargar datos
         dashboardViewModel.cargarPeliculas();
-    }
-
-    private void setupThemeSwitch() {
-        binding.switchTheme.setChecked(ThemeHelper.isDarkMode(requireContext()));
-        binding.switchTheme.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            ThemeHelper.setDarkMode(requireContext(), isChecked);
-            requireActivity().recreate();
-        });
     }
 
     private void setupRecyclerView() {
@@ -81,14 +72,6 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
             }
         });
 
-        dashboardViewModel.getNavigateToLogin().observe(getViewLifecycleOwner(), shouldNavigate -> {
-            if (shouldNavigate) {
-                Intent intent = new Intent(requireContext(), LoginActivity.class);
-                startActivity(intent);
-                requireActivity().finish();
-            }
-        });
-
         dashboardViewModel.getError().observe(getViewLifecycleOwner(), error -> {
             if (error != null && !error.isEmpty()) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
@@ -97,22 +80,6 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
 
         dashboardViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             // Aquí puedes mostrar u ocultar un indicador de carga si lo tienes
-        });
-    }
-
-    private void setupListeners() {
-        binding.btnCerrarSesion.setOnClickListener(v -> {
-            dashboardViewModel.cerrarSesion();
-            Toast.makeText(requireContext(), "Cerraste Sesión Exitosamente", Toast.LENGTH_SHORT).show();
-        });
-
-        binding.btnFavoritos.setOnClickListener(v -> {
-            FavouritesFragment favouritesFragment = new FavouritesFragment();
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, favouritesFragment)
-                    .addToBackStack(null)
-                    .commit();
         });
     }
 

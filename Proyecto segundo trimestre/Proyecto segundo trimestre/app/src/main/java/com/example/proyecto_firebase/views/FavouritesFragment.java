@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,10 @@ public class FavouritesFragment extends Fragment implements PeliculaAdapter.OnPe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (getActivity() != null && ((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Mis Favoritos");
+        }
+
         // Inicializar ViewModel
         viewModel = new ViewModelProvider(this).get(FavouritesViewModel.class);
 
@@ -57,10 +62,9 @@ public class FavouritesFragment extends Fragment implements PeliculaAdapter.OnPe
         viewModel.getFavoritos().observe(getViewLifecycleOwner(), favoritos -> {
             if (favoritos != null) {
                 adapter.setPeliculas(favoritos);
-                if (favoritos.isEmpty()) {
-                    Toast.makeText(requireContext(),
-                            "No tienes películas favoritas", Toast.LENGTH_SHORT).show();
-                }
+                // Mostrar u ocultar el estado vacío
+                binding.recyclerViewFavoritos.setVisibility(favoritos.isEmpty() ? View.GONE : View.VISIBLE);
+                binding.emptyStateContainer.setVisibility(favoritos.isEmpty() ? View.VISIBLE : View.GONE);
             }
         });
 
