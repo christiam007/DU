@@ -1,18 +1,14 @@
+// DashboardViewModel.java
 package com.example.proyecto_firebase.viewmodels;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.proyecto_firebase.models.Pelicula;
 import com.example.proyecto_firebase.repositories.DashboardRepository;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class DashboardViewModel extends ViewModel {
     private DashboardRepository dashboardRepository;
@@ -50,37 +46,21 @@ public class DashboardViewModel extends ViewModel {
         navigateToLogin.setValue(true);
     }
 
+    // Método actualizado para cargar películas no favoritas
     public void cargarPeliculas() {
         isLoading.setValue(true);
-        dashboardRepository.getPeliculas(new ValueEventListener() {
+
+        // Usar el nuevo método del repositorio
+        dashboardRepository.getPeliculasNoFavoritas(new DashboardRepository.OnPeliculasListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Pelicula> listaPeliculas = new ArrayList<>();
-                try {
-                    for (DataSnapshot peliculaSnapshot : dataSnapshot.getChildren()) {
-                        String titulo = peliculaSnapshot.child("titulo").getValue(String.class);
-                        String descripcion = peliculaSnapshot.child("descripcion").getValue(String.class);
-                        String imagen = peliculaSnapshot.child("imagen").getValue(String.class);
-
-                        Pelicula pelicula = new Pelicula();
-                        pelicula.setTitulo(titulo);
-                        pelicula.setDescripcion(descripcion);
-                        pelicula.setImagen(imagen);
-                        pelicula.generateId();
-
-                        listaPeliculas.add(pelicula);
-                    }
-                    peliculas.setValue(listaPeliculas);
-                } catch (Exception e) {
-                    error.setValue("Error al procesar los datos: " + e.getMessage());
-                } finally {
-                    isLoading.setValue(false);
-                }
+            public void onPeliculasLoaded(List<Pelicula> listaPeliculas) {
+                peliculas.setValue(listaPeliculas);
+                isLoading.setValue(false);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                error.setValue("Error al cargar las películas: " + databaseError.getMessage());
+            public void onError(String mensaje) {
+                error.setValue(mensaje);
                 isLoading.setValue(false);
             }
         });
