@@ -23,7 +23,6 @@ import com.example.proyecto_firebase.R; // Recursos de la aplicación
 
 import java.util.ArrayList; // Para manejar colecciones de películas
 
-
 // Definición de la clase del fragmento de Dashboard que implementa el listener para clicks en películas
 public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPeliculaClickListener {
     // Variables miembro de la clase
@@ -65,6 +64,15 @@ public class DashboardFragment extends Fragment implements PeliculaAdapter.OnPel
         observeViewModel();
 
         // Solicitar la carga de películas
+        dashboardViewModel.cargarPeliculas();
+    }
+
+    // Método llamado cuando el fragmento se hace visible al usuario
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Recargar películas cada vez que el fragmento se hace visible
+        // Esto asegura que después de eliminar favoritos la lista se actualice
         dashboardViewModel.cargarPeliculas();
     }
 

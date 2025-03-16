@@ -1,17 +1,20 @@
 // Definición del paquete donde se encuentra esta clase
 package com.example.proyecto_firebase.views;
 
-// Importaciones necesarias para la funcionalidad de la actividad
-import android.content.Intent; // Para navegar entre actividades
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBarDrawerToggle; // Para manejar el icono del menú lateral
-import androidx.appcompat.app.AppCompatActivity; // Clase base para actividades
-import androidx.appcompat.widget.Toolbar; // Barra de herramientas moderna
-import androidx.databinding.DataBindingUtil; // Para Data Binding
-import androidx.fragment.app.Fragment; // Para manejar fragmentos
-import com.example.proyecto_firebase.R; // Recursos de la aplicación
-import com.example.proyecto_firebase.databinding.ActivityMainBinding; // Binding generado para el layout
-import com.google.firebase.auth.FirebaseAuth; // Autenticación de Firebase
+import android.widget.Toast;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import com.example.proyecto_firebase.R;
+import com.example.proyecto_firebase.databinding.ActivityMainBinding;
+import com.example.proyecto_firebase.repositories.PeliculaRepository;
+import com.google.firebase.auth.FirebaseAuth;
 
 // Clase principal de la actividad que actúa como contenedor para los fragmentos
 public class MainActivity extends AppCompatActivity {
@@ -65,14 +68,15 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_dashboard) {
                 // Abrir fragmento de Dashboard
                 openFragment(new DashboardFragment());
-
-
             } else if (id == R.id.nav_favourites) {
                 // Abrir fragmento de Favoritos
                 openFragment(new FavouritesFragment());
             } else if (id == R.id.nav_profile) {
                 // Abrir fragmento de Perfil
                 openFragment(new ProfileFragment());
+            } else if (id == R.id.nav_clear_favourites) {
+                // Limpiar todos los favoritos
+                limpiarTodosFavoritos();
             } else if (id == R.id.nav_logout) {
                 // Cerrar sesión
                 logoutUser();
@@ -83,6 +87,38 @@ public class MainActivity extends AppCompatActivity {
             // Devolver true para indicar que el evento fue manejado
             return true;
         });
+    }
+
+    // Nuevo método para limpiar todos los favoritos
+    private void limpiarTodosFavoritos() {
+        // Crear instancia del repositorio
+        PeliculaRepository peliculaRepository = new PeliculaRepository();
+
+        // Mostrar diálogo de confirmación
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Limpiar Favoritos")
+                .setMessage("¿Estás seguro de que deseas eliminar todos tus favoritos?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    // Eliminar todos los favoritos
+                    peliculaRepository.eliminarTodosFavoritos(task -> {
+                        if (task.isSuccessful()) {
+                            // Mostrar mensaje de éxito
+                            Toast.makeText(this, "Todos los favoritos eliminados", Toast.LENGTH_SHORT).show();
+
+                            // Cargar el fragmento de Dashboard con todas las películas
+                            openFragment(new DashboardFragment());
+                        } else {
+                            // Mostrar mensaje de error si hay uno
+                            String errorMsg = task.getException() != null ?
+                                    task.getException().getMessage() :
+                                    "Error desconocido";
+                            Toast.makeText(this, "Error al eliminar favoritos: " + errorMsg,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     // Método para abrir un fragmento en el contenedor

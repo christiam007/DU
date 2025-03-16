@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnFailureListener; // Para manejar fallos
 import com.google.android.gms.tasks.OnSuccessListener; // Para manejar éxitos
 import com.google.android.gms.tasks.Tasks; // Utilidades para tareas de Firebase
 import com.google.firebase.auth.FirebaseAuth; // Para autenticación y obtener usuario actual
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot; // Representa datos de Firebase Database
 import com.google.firebase.database.DatabaseError; // Para manejar errores de la base de datos
 import com.google.firebase.database.DatabaseReference; // Referencia a ubicación en la base de datos
@@ -176,4 +177,25 @@ public class PeliculaRepository {
                 .setValue(true)
                 .addOnCompleteListener(listener);
     }
+
+    // PeliculaRepository.java
+    public void eliminarTodosFavoritos(OnCompleteListener<Void> listener) {
+        // Validar que el usuario esté autenticado
+        if (firebaseAuth.getCurrentUser() == null) {
+            // Completar con error si el usuario no está autenticado
+            listener.onComplete(Tasks.forException(new Exception("Usuario no autenticado")));
+            return;
+        }
+
+        // Obtener ID del usuario actual
+        String userId = firebaseAuth.getCurrentUser().getUid();
+
+        // Eliminar completamente el nodo de favoritos
+        usuariosRef
+                .child(userId)
+                .child("favoritos")
+                .removeValue()
+                .addOnCompleteListener(listener);
+    }
+
 }
