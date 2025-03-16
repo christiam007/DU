@@ -3,7 +3,9 @@ package com.example.proyecto_firebase.views;
 
 // Importaciones necesarias para la funcionalidad de la actividad
 import android.app.ProgressDialog; // Para mostrar un diálogo de progreso durante el login
+import android.content.Context; // Para acceder a SharedPreferences
 import android.content.Intent; // Para navegar entre actividades
+import android.content.SharedPreferences; // Para guardar el usuario
 import android.os.Bundle;
 import android.view.HapticFeedbackConstants; // Para retroalimentación táctil (vibración)
 import android.view.View;
@@ -32,6 +34,18 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Verificar si ya hay un usuario guardado en SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        String userId = sharedPref.getString("userId", null);
+
+        // Si hay un usuario guardado, ir directamente a MainActivity
+        if (userId != null) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+            return; // Importante para evitar cargar la UI innecesariamente
+        }
+
         setContentView(R.layout.login_main); // Establecer el layout de la actividad
         inicializarVistas(); // Inicializar referencias a las vistas
         configurarViewModel(); // Configurar el ViewModel
@@ -66,6 +80,12 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getLoginResult().observe(this, usuarioFirebase -> {
             dialogoProgreso.dismiss(); // Ocultar diálogo de progreso
             if (usuarioFirebase != null) {
+                // Guardar usuario en SharedPreferences
+                SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("userId", usuarioFirebase.getUid());
+                editor.apply();
+
                 // Si el login fue exitoso, navegar a MainActivity
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish(); // Cerrar esta actividad para que no vuelva al presionar "atrás"

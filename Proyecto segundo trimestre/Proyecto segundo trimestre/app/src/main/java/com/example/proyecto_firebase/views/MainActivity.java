@@ -1,20 +1,21 @@
 // Definición del paquete donde se encuentra esta clase
 package com.example.proyecto_firebase.views;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Intent;
+// Importaciones necesarias para la funcionalidad de la actividad
+import android.content.Context; // Para acceder a SharedPreferences
+import android.content.Intent; // Para navegar entre actividades
+import android.content.SharedPreferences; // Para manipular SharedPreferences
 import android.os.Bundle;
-import android.widget.Toast;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import com.example.proyecto_firebase.R;
-import com.example.proyecto_firebase.databinding.ActivityMainBinding;
-import com.example.proyecto_firebase.repositories.PeliculaRepository;
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.appcompat.app.ActionBarDrawerToggle; // Para manejar el icono del menú lateral
+import androidx.appcompat.app.AppCompatActivity; // Clase base para actividades
+import androidx.appcompat.widget.Toolbar; // Barra de herramientas moderna
+import androidx.databinding.DataBindingUtil; // Para Data Binding
+import androidx.fragment.app.Fragment; // Para manejar fragmentos
+import com.example.proyecto_firebase.R; // Recursos de la aplicación
+import com.example.proyecto_firebase.databinding.ActivityMainBinding; // Binding generado para el layout
+import com.example.proyecto_firebase.repositories.PeliculaRepository; // Repositorio para películas
+import com.google.firebase.auth.FirebaseAuth; // Autenticación de Firebase
+import android.widget.Toast; // Para mostrar mensajes al usuario
 
 // Clase principal de la actividad que actúa como contenedor para los fragmentos
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Método para verificar la autenticación cuando la actividad comienza
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Verificar si el usuario está autenticado en Firebase
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            // Si no hay usuario autenticado, eliminar de SharedPreferences y redirigir a login
+            SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+            sharedPref.edit().remove("userId").apply();
+
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+    }
+
     // Método para configurar el listener del Navigation Drawer
     private void setupDrawerListener() {
         // Asignar un listener a los clics en elementos del menú
@@ -89,7 +106,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Nuevo método para limpiar todos los favoritos
+    // Método para abrir un fragmento en el contenedor
+    private void openFragment(Fragment fragment) {
+        // Iniciar una transacción de fragmento
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment) // Reemplazar el contenido actual
+                .commit(); // Confirmar la transacción
+    }
+
+    // Método para cerrar la sesión del usuario
+    private void logoutUser() {
+        // Cerrar sesión en Firebase Auth
+        FirebaseAuth.getInstance().signOut();
+
+        // Eliminar usuario de SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("AppConfig", Context.MODE_PRIVATE);
+        sharedPref.edit().remove("userId").apply();
+
+        // Crear intent para ir a la pantalla de login
+        Intent intent = new Intent(this, LoginActivity.class);
+        // Iniciar la actividad de login
+        startActivity(intent);
+        // Finalizar esta actividad para que no se pueda volver atrás
+        finish();
+    }
+
+    // Método para limpiar todos los favoritos
     private void limpiarTodosFavoritos() {
         // Crear instancia del repositorio
         PeliculaRepository peliculaRepository = new PeliculaRepository();
@@ -119,26 +162,5 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
-    }
-
-    // Método para abrir un fragmento en el contenedor
-    private void openFragment(Fragment fragment) {
-        // Iniciar una transacción de fragmento
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, fragment) // Reemplazar el contenido actual
-                .commit(); // Confirmar la transacción
-    }
-
-    // Método para cerrar la sesión del usuario
-    private void logoutUser() {
-        // Cerrar sesión en Firebase Auth
-        FirebaseAuth.getInstance().signOut();
-        // Crear intent para ir a la pantalla de login
-        Intent intent = new Intent(this, LoginActivity.class);
-        // Iniciar la actividad de login
-        startActivity(intent);
-        // Finalizar esta actividad para que no se pueda volver atrás
-        finish();
     }
 }
